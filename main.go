@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	_ "Durotan/routers"
+	"github.com/astaxie/beego"
+)
 
 func main() {
-  fmt.Printf("Hello, world.\n")
+	beego.Run()
 }
+
