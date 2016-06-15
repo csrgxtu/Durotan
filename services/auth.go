@@ -9,12 +9,12 @@ import (
 
 var UserCollection = beego.AppConfig.String("UserCollection")
 
-func Login(username, password string) (err error, rtv models.User) {
+func Login(mobile, password string) (err error, rtv models.User) {
   if CheckAndReconnect() != nil {
     return
   }
 
-  var criteria = bson.M{"status": "visable", "username": username}
+  var criteria = bson.M{"status": "visable", "mobile_number": mobile}
   err = Session.DB(DB).C(UserCollection).Find(criteria).One(&rtv)
   if err == nil {
     beego.Info(rtv.UserName)

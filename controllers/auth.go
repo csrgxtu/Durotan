@@ -13,10 +13,10 @@ type AuthController struct {
 
 func (this *AuthController) Login() {
   var rt models.Result
-  var username = this.GetString(":username")
+  var mobile = this.GetString(":mobile")
   var password = this.GetString(":password")
 
-  err, rtv := services.Login(username, password)
+  err, rtv := services.Login(mobile, password)
   if err != nil {
     rt.Error = true
     rt.Msg = err.Error()
