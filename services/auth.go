@@ -9,36 +9,32 @@ import (
 
 var UserCollection = beego.AppConfig.String("UserCollection")
 
-func Login(mobile, password string) (err error, rtv models.User) {
+func Login(mobile, password string) (err error, apikey, userid string) {
   if CheckAndReconnect() != nil {
     return
   }
 
+  var user models.User
   var criteria = bson.M{"status": "visable", "mobile_number": mobile}
-  err = Session.DB(DB).C(UserCollection).Find(criteria).One(&rtv)
+  err = Session.DB(DB).C(UserCollection).Find(criteria).One(&user)
   if err == nil {
     // beego.Info(rtv.Password)
     // beego.Info(GenerateGetMD5Password(mobile, password))
-    if rtv.Password != GenerateGetMD5Password(mobile, password) {
+    if user.Password != GenerateGetMD5Password(mobile, password) {
       err = errors.New("账户信息错误")
       return
     }
 
-    DeleteConsumer(rtv.Password)
+    userid = user.ID.Hex()
 
-    err, _ := CreateKongAPIConsumer(rtv.Password)
+    DeleteConsumer(user.Password)
+
+    err, _ := CreateKongAPIConsumer(user.Password)
     if err != nil {
       beego.Info(err)
     }
 
-    beego.Info("here")
-    err, apikey := GetKongAPIKey(rtv.Password)
-    if err != nil {
-      beego.Info(err)
-    } else {
-      beego.Info(apikey)
-    }
-
+    err, apikey = GetKongAPIKey(user.Password)
   }
 
   return

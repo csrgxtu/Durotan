@@ -60,11 +60,14 @@ func CreateKongAPIConsumer(consumer_id string) (err error, consumer string) {
 
 func GetKongAPIKey(consumer_id string) (err error, apikey string) {
   var ConsumerAPI = beego.AppConfig.String("KongConsumerAPI") + consumer_id + "/key-auth"
+  // beego.Info(ConsumerAPI)
 
   request := gorequest.New()
   res, body, errs := request.Post(ConsumerAPI).
     Set("Content-Type", "application/x-www-form-urlencoded").
     End()
+
+  beego.Info("here")
   if len(errs) != 0 {
     err = errs[0]
     return

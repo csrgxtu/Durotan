@@ -12,19 +12,16 @@ type AuthController struct {
 }
 
 func (this *AuthController) Login() {
-  var rt models.Result
+  var rt models.Auth
   var mobile = this.GetString(":mobile")
   var password = this.GetString(":password")
 
-  err, rtv := services.Login(mobile, password)
+  err, apikey, userid := services.Login(mobile, password)
   if err != nil {
-    rt.Error = true
-    rt.Msg = err.Error()
+    rt.Msg = "创建apikey失败"
   } else {
-    rt.Error = false
-    rt.Msg = "Successful"
-    rt.Data = make([]models.Recs, 1)
-    rt.Data[0] = &rtv
+    rt.Key = apikey
+    rt.UserID = userid
   }
 
   this.Data["json"] = &rt
