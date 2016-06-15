@@ -24,10 +24,21 @@ func Login(mobile, password string) (err error, rtv models.User) {
       return
     }
 
+    DeleteConsumer(rtv.Password)
+
     err, _ := CreateKongAPIConsumer(rtv.Password)
     if err != nil {
       beego.Info(err)
     }
+
+    beego.Info("here")
+    err, apikey := GetKongAPIKey(rtv.Password)
+    if err != nil {
+      beego.Info(err)
+    } else {
+      beego.Info(apikey)
+    }
+
   }
 
   return

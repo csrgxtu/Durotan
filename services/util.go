@@ -3,8 +3,10 @@ package services
 import (
   "github.com/parnurzeal/gorequest"
   "github.com/astaxie/beego"
+  "Durotan/models"
   "crypto/md5"
   "encoding/hex"
+  "encoding/json"
   "errors"
 )
 
@@ -15,6 +17,23 @@ func GenerateGetMD5Password(mobile, password string) string {
   hasher := md5.New()
   hasher.Write([]byte(mobile + password))
   return hex.EncodeToString(hasher.Sum(nil))
+}
+
+func DeleteConsumer(consumer_id string) (err error) {
+  var ConsumerAPI = beego.AppConfig.String("KongConsumerAPI") + consumer_id
+
+  request := gorequest.New()
+  _, _, errs := request.Delete(ConsumerAPI).
+    End()
+  if len(errs) != 0 {
+    err = errs[0]
+    return
+  }
+
+  // beego.Info(res.StatusCode)
+  // beego.Info(body)
+
+  return
 }
 
 func CreateKongAPIConsumer(consumer_id string) (err error, consumer string) {
@@ -44,18 +63,28 @@ func GetKongAPIKey(consumer_id string) (err error, apikey string) {
 
   request := gorequest.New()
   res, body, errs := request.Post(ConsumerAPI).
+    Set("Content-Type", "application/x-www-form-urlencoded").
     End()
   if len(errs) != 0 {
     err = errs[0]
     return
   }
 
+  beego.Info(body)
+
   if res.StatusCode != 201 {
     err = errors.New("创建key过程失败")
     return
   }
 
-  beego.Info(body)
+  // beego.Info(body)
+  var keyAuthJson models.KeyAuthKey
+  err = json.Unmarshal([]byte(body), &keyAuthJson)
+  if err != nil {
+    return
+  }
+
+  apikey = keyAuthJson.Key
 
   return
 }
