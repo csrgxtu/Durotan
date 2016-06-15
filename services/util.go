@@ -65,7 +65,8 @@ func GetKongAPIKey(consumer_id string) (err error, apikey string) {
   request := gorequest.New()
   res, body, errs := request.Post(ConsumerAPI).
     // Set("Content-Type", "application/x-www-form-urlencoded").
-    Send(nil).
+    // Send("query=bicycle").
+    Type("form").
     End()
   if len(errs) != 0 {
     err = errs[0]
