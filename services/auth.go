@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego"
 	"gopkg.in/mgo.v2/bson"
 	"Durotan/models"
+  "errors"
 )
 
 var UserCollection = beego.AppConfig.String("UserCollection")
@@ -18,6 +19,10 @@ func Login(mobile, password string) (err error, rtv models.User) {
   if err == nil {
     beego.Info(rtv.Password)
     beego.Info(GenerateGetMD5Password(mobile, password))
+    if rtv.Password != GenerateGetMD5Password(mobile, password) {
+      err = errors.New("账户信息错误")
+    }
   }
+
   return
 }
