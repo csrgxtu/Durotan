@@ -64,23 +64,20 @@ func GetKongAPIKey(consumer_id string) (err error, apikey string) {
 
   request := gorequest.New()
   res, body, errs := request.Post(ConsumerAPI).
-    Set("Content-Type", "application/x-www-form-urlencoded").
+    // Set("Content-Type", "application/x-www-form-urlencoded").
+    Send(nil).
     End()
-
-  beego.Info("here")
   if len(errs) != 0 {
     err = errs[0]
     return
   }
 
   beego.Info(body)
-
   if res.StatusCode != 201 {
     err = errors.New("创建key过程失败")
     return
   }
 
-  // beego.Info(body)
   var keyAuthJson models.KeyAuthKey
   err = json.Unmarshal([]byte(body), &keyAuthJson)
   if err != nil {
