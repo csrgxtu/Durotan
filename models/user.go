@@ -11,6 +11,7 @@ type (
     Avatar       string         `json:"avatar" bson:"avatar"`
     UserID       string         `json:"user_id" bson:"user_id"`
     UserName      string        `json:"user_name" bson:"user_name"`
+    Email       string `json:"email" bson:"email"`
     Password    string    `json:"password" bson:"password"`
     MobileNumber string `json:"mobile_number" bson:"mobile_number"`
     UpdateTime  time.Time `json:"updatetime" bson:"updatetime"`
