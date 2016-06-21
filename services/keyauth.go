@@ -9,7 +9,7 @@ import (
 
 var UserCollection = beego.AppConfig.String("UserCollection")
 
-func Login(mobile, password string) (err error, apikey, userid string) {
+func KeyAuthLogin(mobile, password string) (err error, apikey, userid string) {
   if CheckAndReconnect() != nil {
     return
   }
@@ -18,10 +18,8 @@ func Login(mobile, password string) (err error, apikey, userid string) {
   var criteria = bson.M{"status": "visable", "mobile_number": mobile}
   err = Session.DB(DB).C(UserCollection).Find(criteria).One(&user)
   if err == nil {
-    // beego.Info(rtv.Password)
-    // beego.Info(GenerateGetMD5Password(mobile, password))
     if user.Password != GenerateGetMD5Password(mobile, password) {
-      err = errors.New("账户信息错误")
+      err = errors.New("Unauthorized")
       return
     }
 
@@ -35,6 +33,8 @@ func Login(mobile, password string) (err error, apikey, userid string) {
     }
 
     err, apikey = GetKongAPIKey(user.Password)
+  } else {
+    err = errors.New("Server Internal Error")
   }
 
   return
@@ -49,10 +49,8 @@ func OrgLogin(email, password string) (err error, apikey, orgid string) {
   var criteria = bson.M{"status": "visable", "email": email}
   err = Session.DB(DB).C(UserCollection).Find(criteria).One(&org)
   if err == nil {
-    // beego.Info(rtv.Password)
-    // beego.Info(GenerateGetMD5Password(mobile, password))
     if org.Password != GenerateGetMD5Password(email, password) {
-      err = errors.New("账户信息错误")
+      err = errors.New("Unauthorized")
       return
     }
 
@@ -66,6 +64,8 @@ func OrgLogin(email, password string) (err error, apikey, orgid string) {
     }
 
     err, apikey = GetKongAPIKey(org.Password)
+  } else {
+    err = errors.New("Server Internal Error")
   }
 
   return

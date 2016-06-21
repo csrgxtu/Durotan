@@ -17,7 +17,7 @@ func (this *JWTController) Login() {
   var mobile = this.GetString(":mobile")
   var password = this.GetString(":password")
 
-  err, apikey, userid := services.Login(mobile, password)
+  err, apikey, userid := services.KeyAuthLogin(mobile, password)
   if err != nil {
     rt.Msg = "创建token失败"
     this.Ctx.ResponseWriter.WriteHeader(500)
@@ -25,6 +25,8 @@ func (this *JWTController) Login() {
     rt.Msg = "创建token成功"
     data.Token = apikey
     data.AccountID = userid
+    // rt.Data = make([]models.Recs, 1)
+    rt.Data = data
   }
 
   this.Data["json"] = &rt

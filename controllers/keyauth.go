@@ -17,14 +17,20 @@ func (this *KeyAuthController) Login() {
   var mobile = this.GetString(":mobile")
   var password = this.GetString(":password")
 
-  err, apikey, userid := services.Login(mobile, password)
+  err, apikey, userid := services.KeyAuthLogin(mobile, password)
   if err != nil {
-    rt.Msg = "创建token失败"
-    this.Ctx.ResponseWriter.WriteHeader(500)
+    if err.Error() == "Server Internal Error" {
+      rt.Msg = err.Error()
+      this.Ctx.ResponseWriter.WriteHeader(500)
+    } else {
+      rt.Msg = err.Error()
+      this.Ctx.ResponseWriter.WriteHeader(403)
+    }
   } else {
     rt.Msg = "创建token成功"
     data.Token = apikey
     data.AccountID = userid
+    rt.Data = data
   }
 
   this.Data["json"] = &rt
@@ -39,12 +45,18 @@ func (this *KeyAuthController) OrgLogin() {
 
   err, apikey, orgid := services.OrgLogin(email, password)
   if err != nil {
-    rt.Msg = "创建token失败"
-    this.Ctx.ResponseWriter.WriteHeader(500)
+    if err.Error() == "Server Internal Error" {
+      rt.Msg = err.Error()
+      this.Ctx.ResponseWriter.WriteHeader(500)
+    } else {
+      rt.Msg = err.Error()
+      this.Ctx.ResponseWriter.WriteHeader(403)
+    }
   } else {
     rt.Msg = "创建token成功"
     data.Token = apikey
     data.AccountID = orgid
+    rt.Data = data
   }
 
   this.Data["json"] = &rt
