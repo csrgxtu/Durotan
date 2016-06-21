@@ -5,14 +5,13 @@ type (
 	}
 
 	Result struct {
-		Error bool   `json:"err" bson:"err"`
 		Msg   string `json:"msg" bson:"msg"`
 		Data  []Recs `json:"data" bson:"data"`
 	}
 
   Auth struct {
-    Key string  `json:"key" bson:"key"`
-    UserID string `json:"user_id" bson:"user_id"`
-    Msg string `json:"msg" bson:"msg"`
+    Token string `json:"token" bson:"token"`
+    RefreshToken string `json:"refresh_token" bson:"refresh_token"`
+    AccountID string `json:"aid" bson:"aid"`
   }
 )
