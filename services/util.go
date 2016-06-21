@@ -58,7 +58,7 @@ func CreateKongAPIConsumer(consumer_id string) (err error, consumer string) {
   return
 }
 
-func GetKongAPIKey(consumer_id string) (err error, apikey string) {
+func GetKongKeyAuthToken(consumer_id string) (err error, apikey string) {
   var ConsumerAPI = beego.AppConfig.String("KongConsumerAPI") + consumer_id + "/key-auth"
   // beego.Info(ConsumerAPI)
 
@@ -75,7 +75,7 @@ func GetKongAPIKey(consumer_id string) (err error, apikey string) {
 
   beego.Info(body)
   if res.StatusCode != 201 {
-    err = errors.New("创建key过程失败")
+    err = errors.New("创建token过程失败")
     return
   }
 
@@ -86,6 +86,27 @@ func GetKongAPIKey(consumer_id string) (err error, apikey string) {
   }
 
   apikey = keyAuthJson.Key
+
+  return
+}
+
+func GetKongJWTToken(consumer_id string) (err error, token string) {
+  var ConsumerAPI = beego.AppConfig.String("KongConsumerAPI") + consumer_id + "/jwt"
+
+  request := gorequest.New()
+  res, body, errs := request.Post(ConsumerAPI).
+    Type("form").
+    End()
+  if len(errs) != 0 {
+    err = errs[0]
+    return
+  }
+
+  beego.Info(body)
+  if res.StatusCode != 201 {
+    err = errors.New("创建token过程失败")
+    return
+  }
 
   return
 }

@@ -32,7 +32,7 @@ func KeyAuthLogin(mobile, password string) (err error, apikey, userid string) {
       beego.Info(err)
     }
 
-    err, apikey = GetKongAPIKey(user.Password)
+    err, apikey = GetKongKeyAuthToken(user.Password)
   } else {
     err = errors.New("Server Internal Error")
   }
@@ -63,7 +63,7 @@ func OrgLogin(email, password string) (err error, apikey, orgid string) {
       beego.Info(err)
     }
 
-    err, apikey = GetKongAPIKey(org.Password)
+    err, apikey = GetKongKeyAuthToken(org.Password)
   } else {
     err = errors.New("Server Internal Error")
   }
