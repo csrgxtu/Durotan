@@ -12,16 +12,19 @@ type KeyAuthController struct {
 }
 
 func (this *KeyAuthController) Login() {
-  var rt models.Auth
+  var rt models.Result
+  var data models.Auth
   var mobile = this.GetString(":mobile")
   var password = this.GetString(":password")
 
   err, apikey, userid := services.Login(mobile, password)
   if err != nil {
-    rt.Msg = "创建apikey失败"
+    rt.Msg = "创建token失败"
+    this.Ctx.ResponseWriter.WriteHeader(500)
   } else {
-    rt.Key = apikey
-    rt.UserID = userid
+    rt.Msg = "创建token成功"
+    data.Token = apikey
+    data.AccountID = userid
   }
 
   this.Data["json"] = &rt
@@ -29,16 +32,19 @@ func (this *KeyAuthController) Login() {
 }
 
 func (this *KeyAuthController) OrgLogin() {
-  var rt models.Auth
+  var rt models.Result
+  var data models.Auth
   var email = this.GetString(":email")
   var password = this.GetString(":password")
 
   err, apikey, orgid := services.OrgLogin(email, password)
   if err != nil {
-    rt.Msg = "创建apikey失败"
+    rt.Msg = "创建token失败"
+    this.Ctx.ResponseWriter.WriteHeader(500)
   } else {
-    rt.Key = apikey
-    rt.UserID = orgid
+    rt.Msg = "创建token成功"
+    data.Token = apikey
+    data.AccountID = orgid
   }
 
   this.Data["json"] = &rt
