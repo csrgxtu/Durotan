@@ -40,16 +40,16 @@ func KeyAuthLogin(mobile, password string) (err error, apikey, userid string) {
   return
 }
 
-func OrgLogin(email, password string) (err error, apikey, orgid string) {
+func OrgLogin(mobile, password string) (err error, apikey, orgid string) {
   if CheckAndReconnect() != nil {
     return
   }
 
   var org models.User
-  var criteria = bson.M{"status": "visable", "email": email}
+  var criteria = bson.M{"status": "visable", "mobile_number": mobile, "organization": bson.M{"$exists": true}}
   err = Session.DB(DB).C(UserCollection).Find(criteria).One(&org)
   if err == nil {
-    if org.Password != GenerateGetMD5Password(email, password) {
+    if org.Password != GenerateGetMD5Password(mobile, password) {
       err = errors.New("Unauthorized")
       return
     }

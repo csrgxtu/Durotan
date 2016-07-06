@@ -8,7 +8,7 @@ import (
 func init() {
   // Key Auth
   beego.Router("/auth/keyauth/login/:mobile/:password", &controllers.KeyAuthController{}, "get:Login")
-  beego.Router("/auth/keyauth/orglogin/:email/:password", &controllers.KeyAuthController{}, "get:OrgLogin")
+  beego.Router("/auth/keyauth/orglogin/:mobile/:password", &controllers.KeyAuthController{}, "get:OrgLogin")
 
   // JWT Auth
   beego.Router("/auth/jwt/login/:mobile/:password", &controllers.JWTController{}, "get:Login")
