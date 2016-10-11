@@ -40,10 +40,10 @@ func (this *KeyAuthController) Login() {
 func (this *KeyAuthController) OrgLogin() {
   var rt models.Result
   var data models.Auth
-  var email = this.GetString(":email")
+  var mobile = this.GetString(":mobile")
   var password = this.GetString(":password")
 
-  err, apikey, orgid := services.OrgLogin(email, password)
+  err, apikey, orgid := services.OrgLogin(mobile, password)
   if err != nil {
     if err.Error() == "Server Internal Error" {
       rt.Msg = err.Error()
