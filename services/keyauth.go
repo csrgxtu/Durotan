@@ -46,11 +46,7 @@ func OrgLogin(mobile, password string) (err error, apikey, orgid string) {
   }
 
   var org models.User
-<<<<<<< HEAD
-  var criteria = bson.M{"status": "visable", "mobile_number": mobile}
-=======
   var criteria = bson.M{"status": "visable", "mobile_number": mobile, "organization": bson.M{"$exists": true}}
->>>>>>> 5fde1a149a67f3c085d9b12e3992620c2776e2c4
   err = Session.DB(DB).C(UserCollection).Find(criteria).One(&org)
   if err == nil {
     if org.Password != GenerateGetMD5Password(mobile, password) {
