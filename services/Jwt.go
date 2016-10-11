@@ -18,8 +18,10 @@ func JWTLogin(Type, openid, mobile, password string) (err error, token, aid stri
   if Type == "Wechat" {
     var criteria = bson.M{"status": "visable", "openid": openid}
     err = Session.DB(DB).C(UserCollection).Find(criteria).One(&Account)
+    beego.Info(Account.ID.Hex())
     if err == nil {
-      aid = Account.ID.Hex()
+      // aid = Account.ID.Hex()
+      aid = Account.UserID
       token = GenerateJwtToken()
     }
   } else {
@@ -31,7 +33,8 @@ func JWTLogin(Type, openid, mobile, password string) (err error, token, aid stri
         return
       }
 
-      aid = Account.ID.Hex()
+      // aid = Account.ID.Hex()
+      aid = Account.UserID
       token = GenerateJwtToken()
     }
   }
