@@ -2,6 +2,7 @@ package services
 
 import (
   "github.com/parnurzeal/gorequest"
+  jwt "github.com/dgrijalva/jwt-go"
   "github.com/astaxie/beego"
   "Durotan/models"
   "crypto/md5"
@@ -9,6 +10,29 @@ import (
   "encoding/json"
   "errors"
 )
+
+
+/**
+ * GenerateJwtToken
+ * 生成jwt token
+ */
+func GenerateJwtToken() string {
+  var alg = beego.AppConfig.String("JwtAlg")
+  var secret = beego.AppConfig.String("JwtSecret")
+  var expire, _ = beego.AppConfig.Int64("JwtExpire")
+
+  SigningKey := []byte(secret)
+
+  // Create the Claims
+  claims := &jwt.StandardClaims{
+      ExpiresAt: expire,
+  }
+
+  token := jwt.NewWithClaims(jwt.GetSigningMethod(alg), claims)
+  tokenStr, _ := token.SignedString(SigningKey)
+
+  return tokenStr
+}
 
 /**
  * 生成或者获取md5的密码，从mobile和明文的password
