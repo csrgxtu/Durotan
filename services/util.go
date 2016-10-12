@@ -9,6 +9,7 @@ import (
   "encoding/hex"
   "encoding/json"
   "errors"
+  "time"
 )
 
 
@@ -24,10 +25,14 @@ func GenerateJwtToken(aid string) string {
   SigningKey := []byte(secret)
 
   // Create the Claims
-  claims := &jwt.StandardClaims{
+  claims := &jwt.MapClaims{
     "aid": aid,
-    ExpiresAt: expire,
+    "exp": time.Now().Add(time.Hour * time.Duration(expire)).Unix(), // token到期时间
   }
+  // claims := &jwt.StandardClaims{
+  //   "aid": aid,
+  //   ExpiresAt: expire,
+  // }
 
   token := jwt.NewWithClaims(jwt.GetSigningMethod(alg), claims)
   tokenStr, _ := token.SignedString(SigningKey)
