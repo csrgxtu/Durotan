@@ -16,7 +16,7 @@ import (
  * GenerateJwtToken
  * 生成jwt token
  */
-func GenerateJwtToken() string {
+func GenerateJwtToken(aid string) string {
   var alg = beego.AppConfig.String("JwtAlg")
   var secret = beego.AppConfig.String("JwtSecret")
   var expire, _ = beego.AppConfig.Int64("JwtExpire")
@@ -25,7 +25,8 @@ func GenerateJwtToken() string {
 
   // Create the Claims
   claims := &jwt.StandardClaims{
-      ExpiresAt: expire,
+    "aid": aid,
+    ExpiresAt: expire,
   }
 
   token := jwt.NewWithClaims(jwt.GetSigningMethod(alg), claims)

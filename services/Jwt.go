@@ -22,7 +22,7 @@ func JWTLogin(Type, openid, mobile, password string) (err error, token, aid stri
     if err == nil {
       // aid = Account.ID.Hex()
       aid = Account.UserID
-      token = GenerateJwtToken()
+      token = GenerateJwtToken(aid)
     }
   } else {
     var criteria = bson.M{"status": "visable", "mobile_number": mobile}
@@ -35,7 +35,7 @@ func JWTLogin(Type, openid, mobile, password string) (err error, token, aid stri
 
       // aid = Account.ID.Hex()
       aid = Account.UserID
-      token = GenerateJwtToken()
+      token = GenerateJwtToken(aid)
     }
   }
 
